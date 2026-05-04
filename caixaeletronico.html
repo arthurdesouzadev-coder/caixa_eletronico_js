@@ -1,0 +1,209 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Caixa Eletrônico</title>
+
+	<script>
+		var saldo = 100.5;
+		var nome = "";
+		var senhaCorreta = 3589;
+
+		var extrato = [
+			"Depósito inicial: R$ 100.50",
+			"Compra no mercado: -R$ 25.00",
+			"Depósito recebido: +R$ 50.00",
+			"Pagamento de conta: -R$ 15.00"
+		];
+
+		function boas_vindas() {
+			nome = prompt("Informe seu nome:");
+
+			if (nome === null || nome.trim() === "") {
+				nome = "Usuário";
+			}
+
+			alert("Olá " + nome + ", é um prazer ter você por aqui!");
+			inicio();
+		}
+
+		function inicio() {
+			var escolha = parseInt(prompt(
+				"Selecione uma opção:\n\n" +
+				"1.) Saldo\n" +
+				"2.) Extrato\n" +
+				"3.) Saque\n" +
+				"4.) Depósito\n" +
+				"5.) Transferência\n" +
+				"6.) Sair"
+			));
+
+			switch (escolha) {
+				case 1:
+					ver_saldo();
+					break;
+
+				case 2:
+					ver_extrato();
+					break;
+
+				case 3:
+					fazer_saque();
+					break;
+
+				case 4:
+					fazer_deposito();
+					break;
+
+				case 5:
+					fazer_transferencia();
+					break;
+
+				case 6:
+					sair();
+					break;
+
+				default:
+					erro();
+					break;
+			}
+		}
+
+		function validar_senha(funcaoAtual) {
+			var senha = parseInt(prompt("Informe sua senha:"));
+
+			if (senha === senhaCorreta) {
+				return true;
+			} else {
+				alert("Senha incorreta!");
+				funcaoAtual();
+				return false;
+			}
+		}
+
+		function ver_saldo() {
+			if (!validar_senha(ver_saldo)) {
+				return;
+			}
+
+			alert("Seu saldo atual é: R$ " + saldo.toFixed(2));
+			inicio();
+		}
+
+		function ver_extrato() {
+			if (!validar_senha(ver_extrato)) {
+				return;
+			}
+
+			var mensagem = "Extrato da conta:\n\n";
+
+			for (var i = 0; i < extrato.length; i++) {
+				mensagem += (i + 1) + " - " + extrato[i] + "\n";
+			}
+
+			mensagem += "\nSaldo atual: R$ " + saldo.toFixed(2);
+
+			alert(mensagem);
+			inicio();
+		}
+
+		function fazer_deposito() {
+			var deposito = parseFloat(prompt("Qual o valor para depósito?"));
+
+			if (isNaN(deposito)) {
+				alert("Por favor, informe um número:");
+				fazer_deposito();
+			} else if (deposito <= 0) {
+				alert("Operação não autorizada");
+				inicio();
+			} else {
+				saldo += deposito;
+				extrato.push("Depósito realizado: +R$ " + deposito.toFixed(2));
+
+				alert("Depósito realizado com sucesso!");
+				ver_saldo();
+			}
+		}
+
+		function fazer_saque() {
+			if (!validar_senha(fazer_saque)) {
+				return;
+			}
+
+			var saque = parseFloat(prompt("Qual o valor para saque?"));
+
+			if (isNaN(saque)) {
+				alert("Por favor, informe um número:");
+				fazer_saque();
+			} else if (saque <= 0 || saque > saldo) {
+				alert("Operação não autorizada");
+				inicio();
+			} else {
+				saldo -= saque;
+				extrato.push("Saque realizado: -R$ " + saque.toFixed(2));
+
+				alert("Saque realizado com sucesso!");
+				inicio();
+			}
+		}
+
+		function fazer_transferencia() {
+			if (!validar_senha(fazer_transferencia)) {
+				return;
+			}
+
+			var conta = prompt("Informe o número da conta:");
+
+			if (conta === null || conta.trim() === "" || isNaN(conta)) {
+				alert("Número de conta inválido!");
+				fazer_transferencia();
+				return;
+			}
+
+			var valorTransferencia = parseFloat(prompt("Qual o valor da transferência?"));
+
+			if (isNaN(valorTransferencia)) {
+				alert("Por favor, informe um número:");
+				fazer_transferencia();
+			} else if (valorTransferencia <= 0 || valorTransferencia > saldo) {
+				alert("Operação não autorizada");
+				inicio();
+			} else {
+				saldo -= valorTransferencia;
+
+				extrato.push(
+					"Transferência para conta " + conta + ": -R$ " + valorTransferencia.toFixed(2)
+				);
+
+				alert(
+					"Transferência realizada com sucesso!\n" +
+					"Conta destino: " + conta + "\n" +
+					"Valor: R$ " + valorTransferencia.toFixed(2)
+				);
+
+				inicio();
+			}
+		}
+
+		function erro() {
+			alert("Por favor, informe um número entre 1 a 6");
+			inicio();
+		}
+
+		function sair() {
+			var confirma = confirm("Você deseja sair?");
+
+			if (confirma) {
+				alert(nome + ", foi um prazer ter você por aqui!");
+			} else {
+				inicio();
+			}
+		}
+
+		boas_vindas();
+	</script>
+</head>
+
+<body>
+
+</body>
+</html>
